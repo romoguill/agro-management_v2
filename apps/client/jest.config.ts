@@ -1,11 +1,11 @@
 /* eslint-disable */
 export default {
-  displayName: 'agro-management_v2',
+  displayName: 'client',
   preset: '../../jest.preset.js',
   transform: {
     '^(?!.*\\.(js|jsx|ts|tsx|css|json)$)': '@nx/react/plugins/jest',
     '^.+\\.[tj]sx?$': ['babel-jest', { presets: ['@nx/next/babel'] }],
   },
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx'],
-  coverageDirectory: '../../coverage/apps/agro-management_v2',
+  coverageDirectory: '../../coverage/apps/client',
 };
