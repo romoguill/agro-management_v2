@@ -2,10 +2,11 @@ import { Module } from '@nestjs/common';
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { MarketDataModule } from '@agro-management-v2/market-data';
+import { MarketDataModule } from './market-data/market-data.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
-  imports: [MarketDataModule],
+  imports: [ConfigModule.forRoot({isGlobal: true}),MarketDataModule],
   controllers: [AppController],
   providers: [AppService],
 })
