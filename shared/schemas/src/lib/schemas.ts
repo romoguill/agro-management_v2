@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { boolean, z } from 'zod';
 
 export class MarketData {
   id: string;
@@ -48,11 +48,12 @@ export const marketApiQueryDTO = z.object({
   product: symbolAPI,
   underlying: symbolDetailAPI,
   segment: z.literal('Agropecuario'),
-  excludeEmptyVol: z.boolean(),
+  excludeEmptyVol: z.coerce
+    .string()
+    .refine((val) => val === 'true' || val === 'false'),
   from: z.string().date(),
   to: z.string().date(),
   sortDir: z.union([z.literal('ASC'), z.literal('DESC')]),
   market: z.literal('ROFX'),
 });
-
 export type MarketApiQueryDTO = z.infer<typeof marketApiQueryDTO>;

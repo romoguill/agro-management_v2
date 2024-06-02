@@ -1,12 +1,8 @@
-import { Injectable, ServiceUnavailableException } from '@nestjs/common';
-import { CreateMarketDatumDto } from './dto/create-market-datum.dto';
-import { UpdateMarketDatumDto } from './dto/update-market-datum.dto';
-import axios from 'axios';
+import { MarketApiQueryDTO } from '@agro-management-v2/schemas';
 import { HttpService } from '@nestjs/axios';
+import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import dayjs from 'dayjs';
-import utc from 'dayjs/plugin/utc';
-import timezone from 'dayjs/plugin/timezone';
 
 @Injectable()
 export class MarketDataService {
@@ -15,17 +11,22 @@ export class MarketDataService {
     private readonly configService: ConfigService
   ) {}
 
-  async findByToken(query: any) {
-    const baseQuery = {
+  async findByToken(
+    query: Pick<MarketApiQueryDTO, 'product' | 'underlying' | 'from' | 'to'>
+  ) {
+    const baseQuery: Pick<
+      MarketApiQueryDTO,
+      'segment' | 'excludeEmptyVol' | 'from' | 'to' | 'sortDir' | 'market'
+    > = {
       segment: 'Agropecuario',
-      excludeEmptyVol: true,
+      excludeEmptyVol: 'true',
       from: dayjs().format('YYYY-MM-DD'),
       to: dayjs().format('YYYY-MM-DD'),
       sortDir: 'ASC',
       market: 'ROFX',
     };
 
-    const finalQuery = {
+    const finalQuery: MarketApiQueryDTO = {
       ...baseQuery,
       ...query,
     };
