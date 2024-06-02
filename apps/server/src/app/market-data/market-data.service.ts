@@ -1,4 +1,7 @@
-import { MarketApiQueryDTO } from '@agro-management-v2/schemas';
+import {
+  MarketApiQueryDTO,
+  MarketDataQueryDTO,
+} from '@agro-management-v2/schemas';
 import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
@@ -11,9 +14,7 @@ export class MarketDataService {
     private readonly configService: ConfigService
   ) {}
 
-  async findByToken(
-    query: Pick<MarketApiQueryDTO, 'product' | 'underlying' | 'from' | 'to'>
-  ) {
+  async findByToken(query: MarketDataQueryDTO) {
     const baseQuery: Pick<
       MarketApiQueryDTO,
       'segment' | 'excludeEmptyVol' | 'from' | 'to' | 'sortDir' | 'market'

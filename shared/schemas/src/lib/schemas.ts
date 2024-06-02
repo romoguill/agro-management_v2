@@ -7,6 +7,8 @@ export class MarketData {
   date: Date;
 }
 
+// ++++++ EXTERNAL API SCHEMAS ++++++
+
 enum symbolAPIEnum {
   SOY_DOLAR = 'SOJ Dolar MATba',
   CORN_DOLAR = 'MAI Dolar MATba',
@@ -57,3 +59,27 @@ export const marketApiQueryDTO = z.object({
   market: z.literal('ROFX'),
 });
 export type MarketApiQueryDTO = z.infer<typeof marketApiQueryDTO>;
+
+// ++++++ INTERNAL API SCHEMAS ++++++
+
+export const Grain = z.enum(['SOY', 'CORN', 'WHEAT']);
+export type Grain = z.infer<typeof Grain>;
+
+export const MarketPlace = z.enum(['ROSARIO', 'CHICAGO']);
+export type MarketPlace = z.infer<typeof MarketPlace>;
+
+export const Derivative = z.enum(['FUTURE', 'OPTION']);
+export type Derivative = z.infer<typeof Derivative>;
+
+export const MarketDataQueryDTO = z
+  .object({
+    grain: Grain,
+    marketPlace: MarketPlace,
+    settlement: z.date(),
+    derivative: Derivative,
+    from: z.date(),
+    to: z.date(),
+  })
+  .refine((data) => data.from <= data.to);
+
+export type MarketDataQueryDTO = z.infer<typeof MarketDataQueryDTO>;
