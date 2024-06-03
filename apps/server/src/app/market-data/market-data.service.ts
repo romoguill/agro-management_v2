@@ -102,8 +102,6 @@ export class MarketDataService {
       }/${monthOfSettlement.toUpperCase()}${yearOfSettlement}`;
     };
 
-    console.log(getUnderlingToken());
-
     return {
       product,
       underlying: getUnderlingToken(),
