@@ -9,46 +9,20 @@ export class MarketData {
 
 // ++++++ EXTERNAL API SCHEMAS ++++++
 
-enum symbolAPIEnum {
-  SOY_DOLAR = 'SOJ Dolar MATba',
-  CORN_DOLAR = 'MAI Dolar MATba',
-  WHEAT_DOLAR = 'TRI Dolar MATba',
-  SOY_PESO = 'SOJ Pesos MATba',
-  CORN_PESO = 'MAI Pesos MATba',
-  WHEAT_PESO = 'TRI Pesos MATba',
-}
-
-const symbolAPI = z.nativeEnum(symbolAPIEnum);
-export type SymbolAPI = z.infer<typeof symbolAPI>;
-
-// TODO: this will change based on the current date: SYMBOL/MMYY. OK for now but must be changed to a mapping function
-enum symbolDetailAPIEnum {
-  SOY_ROS_JUL_24 = 'SOJ.ROS/JUL24',
-  SOY_ROS_AGO_24 = 'SOJ.ROS/AGO24',
-  SOY_ROS_SEP_24 = 'SOJ.ROS/SEP24',
-  SOY_ROS_OCT_24 = 'SOJ.ROS/OCT24',
-  SOY_ROS_NOV_24 = 'SOJ.ROS/NOV24',
-  SOY_ROS_DIC_24 = 'SOJ.ROS/DIC24',
-  CORN_ROS_JUL_24 = 'MAI.ROS/JUL24',
-  CORN_ROS_AGO_24 = 'MAI.ROS/AGO24',
-  CORN_ROS_SEP_24 = 'MAI.ROS/SEP24',
-  CORN_ROS_OCT_24 = 'MAI.ROS/OCT24',
-  CORN_ROS_NOV_24 = 'MAI.ROS/NOV24',
-  CORN_ROS_DIC_24 = 'MAI.ROS/DIC24',
-  WHEAT_ROS_JUL_24 = 'TRI.ROS/JUL24',
-  WHEAT_ROS_AGO_24 = 'TRI.ROS/AGO24',
-  WHEAT_ROS_SEP_24 = 'TRI.ROS/SEP24',
-  WHEAT_ROS_OCT_24 = 'TRI.ROS/OCT24',
-  WHEAT_ROS_NOV_24 = 'TRI.ROS/NOV24',
-  WHEAT_ROS_DIC_24 = 'TRI.ROS/DIC24',
-}
-
-const symbolDetailAPI = z.nativeEnum(symbolDetailAPIEnum);
-export type SymbolDetailAPI = z.infer<typeof symbolDetailAPI>;
+const symbolAPISchema = z.union([
+  z.literal('SOJ Dolar MATba'),
+  z.literal('MAI Dolar MATba'),
+  z.literal('TRI Dolar MATba'),
+  z.literal('SOJ Pesos MATba'),
+  z.literal('MAI Pesos MATba'),
+  z.literal('TRI Pesos MATba'),
+]);
+export type SymbolAPI = z.infer<typeof symbolAPISchema>;
 
 export const marketApiQueryDTO = z.object({
-  product: symbolAPI,
-  underlying: symbolDetailAPI,
+  product: symbolAPISchema,
+  underlying: z.string().optional(),
+  type: z.union([z.literal('FUT'), z.literal('OPT')]),
   segment: z.literal('Agropecuario'),
   excludeEmptyVol: z.coerce
     .string()
@@ -62,24 +36,28 @@ export type MarketApiQueryDTO = z.infer<typeof marketApiQueryDTO>;
 
 // ++++++ INTERNAL API SCHEMAS ++++++
 
-export const Grain = z.enum(['SOY', 'CORN', 'WHEAT']);
-export type Grain = z.infer<typeof Grain>;
+export const grainSchema = z.enum(['SOY', 'CORN', 'WHEAT']);
+export type Grain = z.infer<typeof grainSchema>;
 
-export const MarketPlace = z.enum(['ROSARIO', 'CHICAGO']);
-export type MarketPlace = z.infer<typeof MarketPlace>;
+export const marketPlaceSchema = z.enum(['ROSARIO', 'CHICAGO']);
+export type MarketPlace = z.infer<typeof marketPlaceSchema>;
 
-export const Derivative = z.enum(['FUTURE', 'OPTION']);
-export type Derivative = z.infer<typeof Derivative>;
+export const derivativeSchema = z.enum(['FUTURE', 'OPTION']);
+export type Derivative = z.infer<typeof derivativeSchema>;
 
-export const MarketDataQueryDTO = z
+export const currencySchema = z.enum(['PESO', 'DOLAR']);
+export type Currency = z.infer<typeof currencySchema>;
+
+export const marketQuerySchema = z
   .object({
-    grain: Grain,
-    marketPlace: MarketPlace,
-    settlement: z.date(),
-    derivative: Derivative,
-    from: z.date(),
-    to: z.date(),
+    grain: grainSchema,
+    marketPlace: marketPlaceSchema,
+    settlement: z.string().date(),
+    derivative: derivativeSchema,
+    currencyRef: currencySchema,
+    from: z.string().date(),
+    to: z.string().date(),
   })
   .refine((data) => data.from <= data.to);
 
-export type MarketDataQueryDTO = z.infer<typeof MarketDataQueryDTO>;
+export type MarketDataQueryDTO = z.infer<typeof marketQuerySchema>;
