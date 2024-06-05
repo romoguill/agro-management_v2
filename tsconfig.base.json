@@ -16,7 +16,8 @@
     "strictNullChecks": true,
     "baseUrl": ".",
     "paths": {
-      "@agro-management-v2/schemas": ["shared/schemas/src/index.ts"]
+      "@agro-management-v2/schemas": ["shared/schemas/src/index.ts"],
+      "@client/ui/*": ["apps/client/src/*"]
     }
   },
   "exclude": ["node_modules", "tmp"]
