@@ -1,4 +1,4 @@
-import DataDetailsForm from './DataDetailsForm';
+import DataDetailsForm from '../../components/DataDetailsForm';
 
 function MarketDataPage() {
   return (
